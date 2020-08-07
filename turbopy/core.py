@@ -273,10 +273,7 @@ class Simulation:
     def find_tool_by_name(self, tool_name: str, custom_name: str = None):
         """Returns the :class:`ComputeTool` associated with the
         given name"""
-        tools = [t for t in self.compute_tools if t.name == tool_name]
-        for t in tools:
-            if not t.custom_name == custom_name:
-                tools.remove(t)
+        tools = [t for t in self.compute_tools if t.name == tool_name and t.custom_name == custom_name]
         if len(tools) == 1:
             return tools[0]
         return None
@@ -470,8 +467,8 @@ class ComputeTool(DynamicFactory):
         self.input_data = input_data
         self.name = input_data["type"]
         self.custom_name = None
-        if "instance" in input_data:
-            self.custom_name = input_data["instance"]
+        if "custom_name" in input_data:
+            self.custom_name = input_data["custom_name"]
 
     def initialize(self):
         """Perform any initialization operations needed for this tool"""
