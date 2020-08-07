@@ -270,12 +270,12 @@ class Simulation:
         Unused stub for future implementation"""
         pass
 
-    def find_tool_by_name(self, tool_name: str, custom_name=None: str):
+    def find_tool_by_name(self, tool_name: str, custom_name: str = None):
         """Returns the :class:`ComputeTool` associated with the
         given name"""
         tools = [t for t in self.compute_tools if t.name == tool_name]
         for t in tools:
-            if not (t.custom_name == custom_name):
+            if not t.custom_name == custom_name:
                 tools.remove(t)
         if len(tools) == 1:
             return tools[0]
