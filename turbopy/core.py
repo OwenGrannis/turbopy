@@ -270,10 +270,13 @@ class Simulation:
         Unused stub for future implementation"""
         pass
 
-    def find_tool_by_name(self, tool_name: str):
+    def find_tool_by_name(self, tool_name: str, custom_name=None: str):
         """Returns the :class:`ComputeTool` associated with the
         given name"""
         tools = [t for t in self.compute_tools if t.name == tool_name]
+        for t in tools:
+            if not (t.custom_name == custom_name):
+                tools.remove(t)
         if len(tools) == 1:
             return tools[0]
         return None
@@ -454,6 +457,9 @@ class ComputeTool(DynamicFactory):
         object such as its name.
     name : str
         Type of ComputeTool.
+    custom_name: str
+        Name given to individual instance of tool, optional.
+        Used when multiple tools of the same type exist in one :class:`Simulation`
     """
 
     _factory_type_name = "Compute Tool"
@@ -463,6 +469,9 @@ class ComputeTool(DynamicFactory):
         self.owner = owner
         self.input_data = input_data
         self.name = input_data["type"]
+        self.custom_name = None
+        if "instance" in input_data:
+            self.custom_name = input_data["instance"]
 
     def initialize(self):
         """Perform any initialization operations needed for this tool"""
