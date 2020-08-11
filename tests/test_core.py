@@ -64,7 +64,7 @@ def test_simulation_init_should_create_class_instance_when_called(simple_sim):
                         {"custom_name": "example2"}]},
            "PhysicsModules": {"ExampleModule": {}},
            "Diagnostics": {
-               #default values come first
+               # default values come first
                "clock": {},
                "ExampleDiagnostic": [
                    {},
