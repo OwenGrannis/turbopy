@@ -214,10 +214,14 @@ class Simulation:
         if "Tools" in self.input_data:
             for tool_name, params in self.input_data["Tools"].items():
                 tool_class = ComputeTool.lookup(tool_name)
-                if len(params) >= 1:
-                    for tool in params:
-                        tool["type"] = tool_name
-                        self.compute_tools.append(tool_class(owner=self, input_data=tool))
+                if isinstance(params, list):
+                    if len(params) >= 1:
+                        for tool in params:
+                            tool["type"] = tool_name
+                            self.compute_tools.append(tool_class(owner=self, input_data=tool))
+                    else:
+                        params[0] = {"type": tool_name}
+                        self.compute_tools.append(tool_class(owner=self, input_data=params[0]))
                 else:
                     params["type"] = tool_name
                     self.compute_tools.append(tool_class(owner=self, input_data=params))
