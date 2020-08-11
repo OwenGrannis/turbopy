@@ -22,8 +22,9 @@ def sim_fixt():
            "Clock": {"start_time": 0,
                      "end_time": 10,
                      "num_steps": 100},
-           "Tools": {("ExampleTool", "example"): {"type": "ExampleTool", "custom_name": "example"},
-                     ("ExampleTool", "example2"): {"type": "ExampleTool", "custom_name": "example2"}},
+           "Tools": {"ExampleTool": [
+                    {"custom_name": "example"},
+                    {"custom_name": "example2"}]},
            "PhysicsModules": {"ExampleModule": {}},
            }
     return Simulation(dic)
@@ -41,8 +42,9 @@ def test_simulation_init_should_create_class_instance_when_called(simple_sim):
            "Clock": {"start_time": 0,
                      "end_time": 10,
                      "num_steps": 100},
-           "Tools": {("ExampleTool", "example"): {"type": "ExampleTool", "custom_name": "example"},
-                     ("ExampleTool", "example2"): {"type": "ExampleTool", "custom_name": "example2"}},
+           "Tools": {"ExampleTool": [
+                    {"custom_name": "example"},
+                    {"custom_name": "example2"}]},
            "PhysicsModules": {"ExampleModule":{}}
            }
     assert simple_sim.input_data == dic

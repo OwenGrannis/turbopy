@@ -212,13 +212,15 @@ class Simulation:
     def read_tools_from_input(self):
         """Construct :class:`ComputeTools` based on input"""
         if "Tools" in self.input_data:
-            for tool_names, params in self.input_data["Tools"].items():
-                tool_class = ComputeTool.lookup(tool_names[0])
-                params["type"] = tool_names[0]
-                if "custom_name" in params:
-                    params["custom_name"] = tool_names[1]
-                self.compute_tools.append(tool_class(
-                    owner=self, input_data=params))
+            for tool_name, params in self.input_data["Tools"].items():
+                tool_class = ComputeTool.lookup(tool_name)
+                if len(params) >= 1:
+                    for tool in params:
+                        tool["type"] = tool_name
+                        self.compute_tools.append(tool_class(owner=self, input_data=tool))
+                else:
+                    params["type"] = tool_name
+                    self.compute_tools.append(tool_class(owner=self, input_data=params))
 
     def read_modules_from_input(self):
         """Construct :class:`PhysicsModule` instances based on input"""

@@ -141,5 +141,4 @@ def pif_run():
     ComputeTool.register("ForwardEuler", ForwardEuler)
     input_file = "tests/fixtures/particle_in_field/particle_in_field.toml"
     sim = construct_simulation_from_toml(input_file)
-    sim.input_data["Tools"][("ForwardEuler",)] = sim.input_data["Tools"].pop("ForwardEuler")
     sim.run()
