@@ -149,9 +149,9 @@ def bos_run():
             }
         },
         "Tools": {
-            "Leapfrog": [{}],
-            "BlockForwardEuler": [{}],
-            "BackwardEuler":[{}]
+            "Leapfrog": {},
+            "BlockForwardEuler": {},
+            "BackwardEuler":{}
         },
         "Diagnostics": {
             # default values come first
