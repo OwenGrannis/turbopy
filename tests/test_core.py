@@ -14,6 +14,15 @@ class ExampleModule(PhysicsModule):
         pass
 
 
+class ExampleDiagnostic(Diagnostic):
+    """Example Diagnostic subclass for tests"""
+    def diagnose(self):
+        pass
+
+
+Diagnostic.register("ExampleDiagnostic", ExampleDiagnostic)
+
+
 # Simulation class test methods
 @pytest.fixture(name='simple_sim')
 def sim_fixt():
@@ -23,9 +32,17 @@ def sim_fixt():
                      "end_time": 10,
                      "num_steps": 100},
            "Tools": {"ExampleTool": [
-                    {"custom_name": "example"},
-                    {"custom_name": "example2"}]},
+                        {"custom_name": "example"},
+                        {"custom_name": "example2"}]},
            "PhysicsModules": {"ExampleModule": {}},
+           "Diagnostics": {
+               #default values come first
+               "clock": {},
+               "ExampleDiagnostic": [
+                   {},
+                   {}
+                   ]
+               }
            }
     return Simulation(dic)
 
@@ -43,9 +60,17 @@ def test_simulation_init_should_create_class_instance_when_called(simple_sim):
                      "end_time": 10,
                      "num_steps": 100},
            "Tools": {"ExampleTool": [
-                    {"custom_name": "example"},
-                    {"custom_name": "example2"}]},
+                        {"custom_name": "example"},
+                        {"custom_name": "example2"}]},
            "PhysicsModules": {"ExampleModule":{}}
+           "Diagnostics": {
+               #default values come first
+               "clock": {},
+               "ExampleDiagnostic": [
+                   {},
+                   {}
+                   ]
+               }
            }
     assert simple_sim.input_data == dic
 
@@ -124,7 +149,28 @@ def test_find_tool_by_name_should_identify_one_tool(simple_sim):
     assert tool2.input_data["custom_name"] == "example2"
 
 
-#Grid class test methods
+def test_default_diagnostic_filename_is_generated_if_no_name_specified(simple_sim):
+    """Test read_diagnostic_from_input method in Simulation class"""
+    simple_sim.read_diagnostics_from_input()
+    input_data = simple_sim.diagnostics[0].input_data
+    assert input_data["directory"] == str(Path("default_output"))
+    assert input_data["filename"] == str(Path("default_output")
+                                         / Path("clock0.out"))
+
+
+def test_default_diagnostic_filename_increments_for_multiple_diagnostics(simple_sim):
+    """Test read_diagnostic_from_input method in Simulation class"""
+    simple_sim.read_diagnostics_from_input()
+    assert simple_sim.diagnostics[0].input_data["directory"] == str(Path("default_output"))
+    assert simple_sim.diagnostics[0].input_data["filename"] == str(Path("default_output")
+                                                                   / Path("clock0.out"))
+    input_data = simple_sim.diagnostics[2].input_data
+    assert input_data["directory"] == str(Path("default_output"))
+    assert input_data["filename"] == str(Path("default_output")
+                                         / Path("ExampleDiagnostic1.out"))
+
+
+# Grid class test methods
 @pytest.fixture(name='simple_grid')
 def grid_conf():
     """Pytest fixture for grid configuration dictionary"""
@@ -325,4 +371,3 @@ def test_is_running():
     for i in range(clock2.num_steps):
         clock2.advance()
     assert not clock2.is_running()
-
