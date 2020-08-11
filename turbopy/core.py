@@ -212,11 +212,11 @@ class Simulation:
     def read_tools_from_input(self):
         """Construct :class:`ComputeTools` based on input"""
         if "Tools" in self.input_data:
-            for tool_name, params in self.input_data["Tools"].items():
-                tool_class = ComputeTool.lookup(tool_name)
-                params["type"] = tool_name
-                # TODO: somehow make tool names unique, or prevent
-                #  more than one each
+            for tool_names, params in self.input_data["Tools"].items():
+                tool_class = ComputeTool.lookup(tool_names[0])
+                params["type"] = tool_names[0]
+                if "custom_name" in params:
+                    params["custom_name"] = tool_names[1]
                 self.compute_tools.append(tool_class(
                     owner=self, input_data=params))
 
